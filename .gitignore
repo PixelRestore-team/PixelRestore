@@ -1,0 +1,44 @@
+
+# Python virtual environments
+venv/
+.venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Jupyter and temporary files
+.ipynb_checkpoints/
+*.log
+*.tmp
+
+# Editor and operating system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Temporary outputs
+uploads/
+outputs/
+temp/
+
+# Dataset and training data
+Dataset/
+
+# Ignore model files by default
+*.h5
+*.keras
+
+# Keep only the models required for website inference
+!srn_unet_model_128.keras
+!models/trn/trn_generator.keras
+
+# Ignore generated result plots in the project root
+/*.png

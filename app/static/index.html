@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixelRestore — AI Image Restoration</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+<main class="container">
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="#" class="brand">PixelRestore</a>
+
+        <div class="nav-links">
+            <a href="#how-it-works">How It Works</a>
+            <a href="#about">About</a>
+            <a href="#get-started" class="nav-cta">Get Started</a>
+        </div>
+
+        <span id="health" class="badge">Checking...</span>
+    </nav>
+
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-tag">AI-POWERED IMAGE RESTORATION</div>
+
+        <h1>
+            Missing pieces.<br>
+            <span>Reimagined.</span>
+        </h1>
+
+        <h2>Restore images with the power of AI.</h2>
+
+        <p>
+            Reconstruct missing image regions with intelligent structure
+            recovery, semantic guidance and texture refinement.
+        </p>
+
+        <div class="hero-actions">
+            <a href="#get-started" class="primary-link">
+                Start Reconstructing →
+            </a>
+            <a href="#how-it-works" class="secondary-link">
+                Learn More
+            </a>
+        </div>
+    </section>
+
+
+    
+<!-- Example showcase -->
+<section class="showcase">
+
+    <div class="showcase-card">
+        <div class="showcase-heading">Damaged Input</div>
+        <div class="showcase-visual">
+            <img src="/static/images/damaged.png" alt="Damaged input image">
+        </div>
+    </div>
+
+    <div class="showcase-card">
+        <div class="showcase-heading">Damage Mask</div>
+        <div class="showcase-visual">
+            <img src="/static/images/mask.png" alt="Generated damage mask">
+        </div>
+    </div>
+
+    <div class="showcase-card">
+        <div class="showcase-heading">Refined Output</div>
+        <div class="showcase-visual">
+            <img src="/static/images/restored.png" alt="Reconstructed image">
+        </div>
+    </div>
+
+</section>
+
+
+
+    <!-- Upload -->
+<section class="upload-section" id="get-started">
+    <div class="section-heading">
+        <span>GET STARTED</span>
+        <h2>Restore your image</h2>
+        <p>
+            Upload your damaged image. Our system will automatically
+            detect the white missing regions and generate a damage mask.
+        </p>
+    </div>
+
+    <div class="upload-grid">
+
+        <div class="upload-box">
+            <h3>Damaged Image</h3>
+            <p>
+                Upload an image containing white missing regions
+                that you want the AI to reconstruct.
+            </p>
+            <label for="masked">Upload damaged image</label>
+            <input id="masked" type="file" accept="image/*">
+        </div>
+
+        <div class="upload-box">
+            <h3>Generated Damage Mask</h3>
+            <p>
+                The system automatically identifies white regions
+                and generates a black-and-white damage mask.
+            </p>
+            <div id="mask-preview" class="mask-preview">
+                <span>Your generated mask will appear here.</span>
+            </div>
+        </div>
+
+        <div class="upload-box">
+            <h3>Original Image <span>(Optional)</span></h3>
+            <p>
+                Upload the complete, undamaged image if available.
+                It is used only to calculate evaluation metrics.
+            </p>
+            <label for="gt">Upload original image</label>
+            <input id="gt" type="file" accept="image/*">
+        </div>
+
+    </div>
+
+    <div class="settings-row">
+        <div class="domain-control">
+            <label for="domain">Select Image Domain</label>
+            <select id="domain">
+                <option>AUTO</option>
+                <option>X-RAY</option>
+                <option>BRAIN-MRI</option>
+                <option>AERIAL</option>
+                <option>PLACES</option>
+                <option>FACES</option>
+            </select>
+        </div>
+
+        <button id="run" disabled>Run Reconstruction →</button>
+    </div>
+</section>
+
+    <!-- Status -->
+    <section id="status" class="status hidden"></section>
+
+
+    <!-- Results -->
+    <section id="results" class="results-section hidden">
+        <div class="section-heading">
+            <span>RECONSTRUCTION RESULTS</span>
+            <h2>Your Restored Image</h2>
+            <p>View the intermediate outputs and final reconstruction.</p>
+        </div>
+
+        <div class="grid" id="images"></div>
+
+        <section id="guidance" class="card hidden">
+            <div class="section-head">
+                <h2>Reconstruction Guidance</h2>
+                <span id="source" class="badge"></span>
+            </div>
+
+            <div class="guidance-grid">
+                <div>
+                    <strong id="strategy"></strong>
+                    <p id="rationale"></p>
+                </div>
+                <ul id="instructions"></ul>
+            </div>
+        </section>
+
+        <section class="card metrics-section">
+            <div class="section-heading">
+                <span>EVALUATION</span>
+                <h2>Image Quality Metrics</h2>
+                <p>Calculated when an original image is supplied.</p>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Full PSNR</th>
+                            <th>SSIM</th>
+                            <th>Missing PSNR</th>
+                        </tr>
+                    </thead>
+                    <tbody id="metrics"></tbody>
+                </table>
+            </div>
+
+            <p id="known"></p>
+        </section>
+    </section>
+
+
+    <!-- How it works -->
+    <section class="how-section" id="how-it-works">
+        <div class="section-heading">
+            <span>HOW IT WORKS</span>
+            <h2>Three stages. One restored image.</h2>
+            <p>
+                The system combines structure reconstruction,
+                semantic guidance and texture refinement.
+            </p>
+        </div>
+
+        <div class="pipeline-grid">
+            <article class="pipeline-card">
+                <span>01</span>
+                <h3>Structure Reconstruction</h3>
+                <p>
+                    SRN estimates the missing image content and
+                    creates an initial reconstruction.
+                </p>
+            </article>
+
+            <article class="pipeline-card">
+                <span>02</span>
+                <h3>Semantic Guidance</h3>
+                <p>
+                    Contextual and domain-related guidance supports
+                    the reconstruction process.
+                </p>
+            </article>
+
+            <article class="pipeline-card">
+                <span>03</span>
+                <h3>Texture Refinement</h3>
+                <p>
+                    TRN applies residual corrections to improve
+                    the details of the reconstructed region.
+                </p>
+            </article>
+        </div>
+    </section>
+
+
+    <!-- About -->
+    <section class="about-section" id="about">
+        <span>ABOUT PixelRestore</span>
+        <h2>Making image restoration accessible.</h2>
+        <p>
+            PixelRestore is an image restoration project based on
+            LLM-guided cross-domain image inpainting. It combines
+            structure reconstruction and texture refinement to
+            recover missing image regions while preserving known content.
+        </p>
+    </section>
+
+
+    <!-- Footer -->
+    <footer>
+        <strong>PixelRestore</strong>
+        <p>LLM-Guided Cross-Domain Image Inpainting</p>
+    </footer>
+
+</main>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
+
+
+
