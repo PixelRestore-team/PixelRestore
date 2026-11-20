@@ -40,13 +40,21 @@ def _models():
 
 
 def _rgb(data: bytes) -> np.ndarray:
-    image = Image.open(io.BytesIO(data)).convert("RGB").resize((128, 128), Image.Resampling.BILINEAR)
+    image = Image.open(io.BytesIO(data)).convert("RGB").resize(
+        (128, 128),
+        Image.Resampling.NEAREST
+    )
     return np.asarray(image, dtype=np.float32) / 255.0
 
 
 def _mask(data: bytes) -> np.ndarray:
-    image = Image.open(io.BytesIO(data)).convert("L").resize((128, 128), Image.Resampling.NEAREST)
-    return (np.asarray(image, dtype=np.float32) >= 127.5).astype(np.float32)[..., None]
+    image = Image.open(io.BytesIO(data)).convert("L").resize(
+        (128, 128),
+        Image.Resampling.NEAREST
+    )
+    return (
+        np.asarray(image, dtype=np.float32) / 255.0
+    )[..., None]
 
 
 def _png(arr: np.ndarray) -> str:
@@ -96,6 +104,12 @@ async def reconstruct(masked_image: UploadFile = File(...), mask_image: UploadFi
         x = np.concatenate([masked, mask], axis=-1)[None]
         result = refine(srn, generator, x, residual_scale=0.10)
         srn_out = result["srn_output"][0]
+        print("SRN INPUT SHAPE:", x.shape)
+        print("SRN INPUT MIN/MAX:", float(x.min()), float(x.max()))
+        print("SRN OUTPUT SHAPE:", srn_out.shape)
+        print("SRN OUTPUT MIN:", float(srn_out.min()))
+        print("SRN OUTPUT MAX:", float(srn_out.max()))
+        print("SRN OUTPUT MEAN:", float(srn_out.mean()))
         trn = result["trn_candidate"][0]
         final = result["final_output"][0]
         # Known pixels must be exactly the uploaded masked input in the production composite.
